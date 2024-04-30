@@ -14,7 +14,7 @@ def get_summ(data):
     for i in data:
         summ += i
     print(f'summ: {summ}')
-    print(f'search for the maximum {datetime.datetime.now().timestamp() - start}s')
+    print(f'search for the summ {datetime.datetime.now().timestamp() - start}s')
     print()
 
 
@@ -24,7 +24,7 @@ def get_avg(data):
     for i in data:
         summ += i
     print(f'average: {summ/len(data)}')
-    print(f'search for the minimum {datetime.datetime.now().timestamp() - start}s')
+    print(f'search for the average {datetime.datetime.now().timestamp() - start}s')
 
 
 if __name__ == "__main__":
