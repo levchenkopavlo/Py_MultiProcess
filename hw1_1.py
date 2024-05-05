@@ -8,7 +8,7 @@
 # виводяться на екран.
 import threading
 import random
-import datetime, time
+import datetime
 
 
 def random_list(size=100000, limit=9000000):
