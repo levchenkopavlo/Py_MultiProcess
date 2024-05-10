@@ -5,8 +5,7 @@ import socket
 client = socket.socket(socket.AF_INET,  # use IP4
                        socket.SOCK_STREAM  # use TCP
                        )
-client.connect(('127.0.0.1', 8080))
-
+client.connect(('127.0.0.1', 5000))
 
 file_name = input("Enter filename: ")
 # file_name = 'temp.py'

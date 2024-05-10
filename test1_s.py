@@ -8,7 +8,7 @@ import socket
 server = socket.socket(socket.AF_INET,  # use IP4
                        socket.SOCK_STREAM  # use TCP
                        )
-server.bind(('127.0.0.1', 8080))
+server.bind(('127.0.0.1', 5000))
 server.listen(2)
 print("Waiting...")
 
