@@ -5,12 +5,21 @@ import threading
 
 
 def msg_send():
-    pass
+    while True:
+        msg = input(f'{name}. Enter message: \n')
 
+        client.send(msg.encode())
+        if msg == 'exit':
+            # thread_receive.join()
+            client.close()
+            quit()
 
 def msg_receive():
-    pass
-
+    while True:
+        try:
+            print(client.recv(1024).decode())
+        except:
+            break
 
 if __name__ == "__main__":
 
@@ -18,26 +27,25 @@ if __name__ == "__main__":
                            socket.SOCK_STREAM  # use TCP
                            )
 
-    client.connect(('127.0.0.1', 8080))
+    client.connect(('127.0.0.1', 5000))
 
     while True:
-        data = input("Enter something: ")
-
-        client.send(data.encode())
-
-        if data == 'exit':
-            break
-
+        name = input("Enter your name: ")
+        if not name:
+            print('Name can not be empty.')
+            continue
+        client.send(name.encode())
         response = client.recv(1024).decode()
+        break
+
+    if 'welcome' in response:
+        print('You authorized.')
         print(response)
 
-    client.close()
+        thread_send = threading.Thread(target=msg_send, args=())
+        thread_send.start()
 
-    thread_send = threading.Thread(target=None, args=())
-    thread_send.start()
+        thread_receive = threading.Thread(target=msg_receive, args=())
+        thread_receive.start()
 
-    thread_receive = threading.Thread(target=None, args=())
-    thread_receive.start()
-
-    thread_send.join()
-    thread_receive.join()
+        thread_send.join()

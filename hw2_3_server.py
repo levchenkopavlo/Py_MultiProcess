@@ -6,38 +6,59 @@
 ## Server
 
 import socket
+import threading
 
-server = socket.socket(socket.AF_INET,  # use IP4
-                       socket.SOCK_STREAM  # use TCP
-                       )
-server.bind(('127.0.0.1', 8080))
-server.listen()
 
-clients = {}
-while True:
-    print('waiting for client')
-    client, address = server.accept()
-    print(f"Connection from {address}")
-    name = client.recv(1024).decode()
-    clients[client]=name
-    print(clients)
+def client_logout():
+    pass
 
-# while True:
-#
-#     print("Waiting...")
-#
-#     client, address = server.accept()
-#
-#
-#     while True:
-#         data = client.recv(1024).decode()
-#         print(data)
-#
-#         if data == 'exit':
-#             break
-#
-#         response = input("Enter something: ")
-#
-#         client.send(response.encode())
-#
-#     client.close()
+
+def client_login():
+    while True:
+        try:
+            print('waiting for client')
+            client, address = server.accept()
+            print(f"Connection from {address}")
+            name = client.recv(1024).decode()
+            clients[client] = name
+            for key, value in clients.items():
+                print(f'{key}: {value}')
+            client.send(f'{name}, welcome to chat'.encode())
+            print(f'{name}, welcome to chat')
+            thread_chat = threading.Thread(target=message_processor, args=(client,))
+            thread_chat.start()
+        except:
+            continue
+
+
+def message_processor(client):
+    while True:
+        msg = client.recv(1024).decode()
+        if msg == 'exit':
+            print(client)
+            client.close()
+            del clients[client]
+            print('client deleted')
+            break
+
+        msg = f'{clients[client]} say: ' + msg
+        print(msg)
+
+        for user in clients:
+            if user != client:
+                user.send(msg.encode())
+
+
+if __name__ == "__main__":
+    server = socket.socket(socket.AF_INET,  # use IP4
+                           socket.SOCK_STREAM  # use TCP
+                           )
+    server.bind(('127.0.0.1', 5000))
+    server.listen()
+
+    clients = {}
+
+    thread_main = threading.Thread(target=client_login, args=())
+    thread_main.start()
+
+    thread_main.join()

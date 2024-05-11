@@ -1,23 +1,51 @@
 ## Client
 
 import socket
+import threading
 
 
-client = socket.socket(socket.AF_INET,     # use IP4
-                       socket.SOCK_STREAM  # use TCP
-                       )
+def msg_send():
+    while True:
+        msg = input(f'{name}. Enter message: \n')
 
-client.connect(('127.0.0.1', 8080))
+        client.send(msg.encode())
+        if msg == 'exit':
+            # thread_receive.join()
+            client.close()
+            quit()
 
-while True:
-    data = input("Enter something: ")
+def msg_receive():
+    while True:
+        try:
+            print(client.recv(1024).decode())
+        except:
+            break
 
-    client.send(data.encode())
+if __name__ == "__main__":
 
-    if data == 'exit':
+    client = socket.socket(socket.AF_INET,  # use IP4
+                           socket.SOCK_STREAM  # use TCP
+                           )
+
+    client.connect(('127.0.0.1', 5000))
+
+    while True:
+        name = input("Enter your name: ")
+        if not name:
+            print('Name can not be empty.')
+            continue
+        client.send(name.encode())
+        response = client.recv(1024).decode()
         break
 
-    response = client.recv(1024).decode()
-    print(response)
+    if 'welcome' in response:
+        print('You authorized.')
+        print(response)
 
-client.close()
+        thread_send = threading.Thread(target=msg_send, args=())
+        thread_send.start()
+
+        thread_receive = threading.Thread(target=msg_receive, args=())
+        thread_receive.start()
+
+        thread_send.join()
