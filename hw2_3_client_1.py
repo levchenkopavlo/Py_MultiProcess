@@ -1,23 +1,43 @@
 ## Client
 
 import socket
+import threading
 
 
-client = socket.socket(socket.AF_INET,     # use IP4
-                       socket.SOCK_STREAM  # use TCP
-                       )
+def msg_send():
+    pass
 
-client.connect(('127.0.0.1', 8080))
 
-while True:
-    data = input("Enter something: ")
+def msg_receive():
+    pass
 
-    client.send(data.encode())
 
-    if data == 'exit':
-        break
+if __name__ == "__main__":
 
-    response = client.recv(1024).decode()
-    print(response)
+    client = socket.socket(socket.AF_INET,  # use IP4
+                           socket.SOCK_STREAM  # use TCP
+                           )
 
-client.close()
+    client.connect(('127.0.0.1', 8080))
+
+    while True:
+        data = input("Enter something: ")
+
+        client.send(data.encode())
+
+        if data == 'exit':
+            break
+
+        response = client.recv(1024).decode()
+        print(response)
+
+    client.close()
+
+    thread_send = threading.Thread(target=None, args=())
+    thread_send.start()
+
+    thread_receive = threading.Thread(target=None, args=())
+    thread_receive.start()
+
+    thread_send.join()
+    thread_receive.join()
