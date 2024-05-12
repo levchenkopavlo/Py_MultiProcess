@@ -9,10 +9,6 @@ import socket
 import threading
 
 
-def client_logout():
-    pass
-
-
 def client_login():
     while True:
         try:
