@@ -12,7 +12,6 @@ def msg_receive():
             choice = input("введіть номер поля для ходу: ")
             client.send(choice.encode('utf-8'))
         elif msg.startswith('system'):
-            # print('--- '+msg)
             pass
         elif msg:
             print(msg)

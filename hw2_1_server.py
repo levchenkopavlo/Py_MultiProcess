@@ -23,11 +23,13 @@ def client_login():
     print(f'Player {name} connected')
 
 
+def client_logout():
+    pass
+
+
 def send_msg(msg):
     for client in clients.values():
         client.send(msg.encode())
-        print(client)
-        print(msg)
 
 
 def print_field(field):
@@ -42,26 +44,7 @@ def print_field(field):
     send_msg(sum_line)
 
 
-if __name__ == "__main__":
-    server = socket.socket(socket.AF_INET,  # use IP4
-                           socket.SOCK_STREAM  # use TCP
-                           )
-    server.bind(('127.0.0.1', 6000))
-    server.listen(2)
-    clients = {}
-
-    thread_login_player1 = threading.Thread(target=client_login, args=())
-    thread_login_player1.start()
-    thread_login_player2 = threading.Thread(target=client_login, args=())
-    thread_login_player2.start()
-    thread_login_player1.join()
-    thread_login_player2.join()
-
-    players = random.sample(list(clients.keys()), 2)
-    sign = ['X', 'O']
-    sign_to_print = ['\033[34mX\033[0m', '\033[31mO\033[0m']
-    field = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}
-    field_to_print = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}
+def game():
     turn = 0
 
     while turn < 9:
@@ -96,3 +79,27 @@ if __name__ == "__main__":
         print_field(field_to_print)
         print(f"\033[32mНічия!\033[0m")
         send_msg(f"\033[32mНічия!\033[0m")
+
+
+if __name__ == "__main__":
+    server = socket.socket(socket.AF_INET,  # use IP4
+                           socket.SOCK_STREAM  # use TCP
+                           )
+    server.bind(('127.0.0.1', 6000))
+    server.listen(2)
+    clients = {}
+
+    thread_login_player1 = threading.Thread(target=client_login, args=())
+    thread_login_player1.start()
+    thread_login_player2 = threading.Thread(target=client_login, args=())
+    thread_login_player2.start()
+    thread_login_player1.join()
+    thread_login_player2.join()
+
+    players = random.sample(list(clients.keys()), 2)
+    sign = ['X', 'O']
+    sign_to_print = ['\033[34mX\033[0m', '\033[31mO\033[0m']
+    field = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}
+    field_to_print = {1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9'}
+
+    game()
